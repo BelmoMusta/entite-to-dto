@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ClassToDTO {
 	
 	
-	public static CompilationUnit generateDTO(File file) throws Exception {
+	public static CompilationUnit generateDTO(File file, String prefix) throws Exception {
 		final CompilationUnit compilationUnit = JavaParser.parse(file);
 		final CompilationUnit clone = new CompilationUnit();
 		
@@ -27,9 +27,10 @@ public class ClassToDTO {
 		if (aClass == null) {
 			return null;
 		}
+		
 		final PackageDeclaration packageDeclaration = compilationUnit.getPackageDeclaration()
-				.map(pkg -> pkg.setName(new Name(pkg.getName().asString() + ".dto")))
-				.orElse(new PackageDeclaration(new Name("dto")));
+				.map(pkg -> pkg.setName(new Name(pkg.getName().asString() + "." + prefix)))
+				.orElse(new PackageDeclaration(new Name(prefix)));
 		clone.setPackageDeclaration(packageDeclaration);
 		aClass.addField("Long", "id", Modifier.PRIVATE);
 		compilationUnit.accept(new FieldDTOVisitor(), aClass);
@@ -39,11 +40,11 @@ public class ClassToDTO {
 	public static void generateDTOSinDirectory(String srcDirectory, String prefix, String subdirectory) throws Exception {
 		Collection<File> files = FileUtils.listFiles(new File(srcDirectory), new String[]{"java"}, true);
 		for (File file : files) {
-			final CompilationUnit generatedDtoContent = generateDTO(file);
+			final CompilationUnit generatedDtoContent = generateDTO(file, prefix);
 			if (generatedDtoContent == null) {
 				continue;
 			}
-			String child = file.getName().replaceAll("\\.java", prefix +".java");
+			String child = file.getName().replaceAll("\\.java", prefix + ".java");
 			
 			
 			File destinationFile = new File(new File(file.getParentFile(), subdirectory), child);
@@ -57,6 +58,6 @@ public class ClassToDTO {
 		final String srcDirectory = "D:\\0001_PERSO\\CODE\\booqs\\src\\main\\java\\com\\musta\\belmo\\booqs" +
 				"\\entite";
 		
-		generateDTOSinDirectory(srcDirectory,"DTO", "dto");
+		generateDTOSinDirectory(srcDirectory, "DTO", "dto");
 	}
 }
