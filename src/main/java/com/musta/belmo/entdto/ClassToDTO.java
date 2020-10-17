@@ -11,10 +11,8 @@ import com.musta.belmo.entdto.visitor.FieldDTOVisitor;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Optional;
 
 public class ClassToDTO {
 	

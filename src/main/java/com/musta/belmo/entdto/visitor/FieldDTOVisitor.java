@@ -16,6 +16,11 @@ public class FieldDTOVisitor extends VoidVisitorAdapter<ClassOrInterfaceDeclarat
 		
 		Type commonType = field.getCommonType();
 		String destinationType = commonType.asString();
+		
+		if(destinationType.contains("<")){
+			destinationType = destinationType.replaceAll(">","DTO>");
+		}
+		else
 		if (!isPrimitiveOrInJDK(commonType)) {
 			destinationType += "DTO";
 		}
